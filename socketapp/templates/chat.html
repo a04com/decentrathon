@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div class="chat">
+            <div class="chat__content">
+                <div class="chat__bud" id="1">
+                    <p class="chat__bud-name">Gosha</p>
+                </div>
+            </div>
+            <div class="chat__inputBoard">
+                <input type="text" placeholder="Write a new message" id="msgContent">
+                <button class="chat__button" id="chat-button">Send!</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var socket = io();
+            var user_id = 2;
+
+            socket.on("connect", () =>{
+                socket.emit("user_join", user_id)
+            })
+
+            document.getElementById('chat-button').addEventListener('click', function() {
+                var bud_id = Number(document.querySelector('.chat__bud').id);
+                var msg = document.getElementById("msgContent").value
+                socket.emit("chatMessage", {bud_id:bud_id, user:user_id, msg:msg});
+            });
+            
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>s -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+</head>
+<header>
+    <div class="notification">
+        <h3 class="notification__theme"></h3>
+        <div class="notification__description"></div>
+        <div class="notification__link">
+            <a href="*"></a>
+        </div>
+    </div>
+</header>
+<body>
+    <input id="messageInput" type="text" placeholder="Enter an user_id">
+    <button id="sendButton">Send Message</button>
+    
+    <div class="vacancy" id="1" name="vacancy">
+        <div class="vacancy__img-container">
+            <img src="" alt="">
+        </div>
+        <p class="vacancy__name">Teacher</p>
+        <div class="vacancy__description">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas veniam dicta modi incidunt laboriosam mollitia illo eum temporibus iste soluta expedita architecto consequatur ut, pariatur excepturi ea. Libero, laudantium expedita?
+        </div>
+        <button class="vacancy__responseVacancy" id="responseVacancy">Response</button>
+
+        <div class="vacancy__commentaries">
+            <ul class="vacancy__comment-list">
+                <li>
+                    <div class="comment" id="1">
+                        <p class="comment__content">This vacancy is fraud!</p>
+                        <button class="comment__reply-button" id="replyButton" value="someCommentReply">Reply</button>
+                    </div>
+                </li>
+            </ul>
+            <button class="vacancy_addCommentButton" id="addCommentButton" value="some_comment">Add comment</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var socket = io();
+            var user_id = 1;
+            const notification_el = document.querySelector(".notification");
+            const notification_theme = notification_el.querySelector("h3");
+            const notification_description = notification_el.querySelector(".notification__description");
+            
+            const showNotification = (theme, description, url) => {
+                notification_theme.innerHTML = theme;
+                notification_description.innerHTML = description;
+                setTimeout(() => {
+                    notification_theme.innerHTML = "";
+                    notification_description.innerHTML = "";
+                }, 5000);
+            }
+
+            socket.on("connect", () =>{
+                socket.emit("user_join", user_id)
+            })
+
+            socket.on('vacancyNotification', function(data) {
+                showNotification("New response to vacancy",`${data.vacancy.name} responded by user ${data.user_responded.name}`, )
+            });
+            socket.on("commentReplyNotification", function(data) {
+                showNotification("New reply to your commentary",`${data.reply} replied by user ${data.user_responded.name}`, )
+            });
+
+            socket.on("vacancyReplyNotification", function(data) {
+                showNotification("New commentary to your vacancy",`${data.reply} replied by user ${data.user_responded.name}`, )
+            });
+
+            socket.on("chatMessageNotification", function(data) {
+                showNotification("New chat_message",`${data.msg} replied by user ${data.from_user.name}`, )
+            });
+
+
+
+
+            document.getElementById('responseVacancy').addEventListener('click', function() {
+                var vacancy_id = document.querySelector('.vacancy').id;
+                socket.emit("vacancyResponsed", {vacancy:vacancy_id, user:user_id});
+            });
+
+            document.getElementById("replyButton").addEventListener("click", () => {
+                var comment_id = Number(document.querySelector(".comment").id);
+                var replyMessage = document.getElementById("replyButton").value
+                socket.emit("commentReply", {comment:comment_id, reply: replyMessage, user: user_id})
+
+            })
+
+            document.getElementById("addCommentButton").addEventListener("click", () => {
+                var vacancy_id = Number(document.querySelector(".vacancy").id);
+                var replyMessage = document.getElementById("addCommentButton").value
+                socket.emit("vacancyReply", {vacancy:vacancy_id, reply: replyMessage, user: user_id})
+
+            })
+            
+        });
+    </script>
+</body>
+</html>

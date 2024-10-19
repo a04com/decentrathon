@@ -1,0 +1,61 @@
+html{
+    margin: 0;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 2vh;   
+}
+
+.form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.submit-button{
+    width: 10%;
+}
+
+.vacancy{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 2vh;
+    margin-top: 4vh;
+}
+
+.notification{
+    width: 30%;
+    position: absolute;
+    left: 80%;
+    top: 15%;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.comment__reply-button{
+    width: 20%;
+    border: none;
+}
+.comment__reply-button:active{
+    width: 20%;
+    border: 2px solid black;
+}
+
+.vacancy__commentaries{
+    gap: 10px;
+
+}
