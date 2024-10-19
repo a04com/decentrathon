@@ -1,30 +1,23 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton,WebAppInfo
+from aiogram import F
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import StatesGroup, State
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, FSInputFile, CallbackQuery
+from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import CommandStart, Command
+import aiogram.utils.markdown as fmt
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from handlers.language_router import router as language_router
 
-bot = Bot(token='7526341893:AAFRdSMm4FtlN_V2-YaGl8MRljKhDd-Tm-o')
+bot = Bot(token='7600812283:AAEfK2lQGELfyzvCucCNAksasBak9a0dA84')
 dp = Dispatcher()
 
-@dp.message(CommandStart())
-async def cmd_start(message: Message):
-    await message.answer("Hello")
+# async def send_message(user_id, text):
+#     await bot.send_message(chat_id=user_id, text=text)
 
-@dp.message(Command('getapp'))
-async def get_app(message: Message):
-    markup = InlineKeyboardMarkup(
-        inline_keyboard = [
-            [
-                InlineKeyboardButton(
-                    text="open",
-                    web_app=WebAppInfo(url='https://235a-95-57-246-132.ngrok-free.app')
-                )
-            ]
-        ]
-    )
-
-    await message.answer('open', reply_markup=markup)
+dp.include_router(language_router)
 
 async def main():
     await dp.start_polling(bot)
