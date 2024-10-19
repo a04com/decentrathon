@@ -8,6 +8,8 @@ from aiogram.types import FSInputFile, InlineKeyboardMarkup, InlineKeyboardButto
 from aiogram.filters import CommandStart
 import aiogram.utils.markdown as fmt
 
+from decentrathon.handlers.keyboards import languageChoiceKeyboard
+
 class Language(StatesGroup):
     language = State()
 
@@ -17,12 +19,12 @@ router = Router()
 async def language_choosing_state(message: Message, state: FSMContext):
     await state.set_state(Language.language)
 
-    keyboard_builder = InlineKeyboardBuilder()
-    keyboard_builder.button(text="kz", callback_data="kz")
-    keyboard_builder.button(text="en", callback_data="en")
-    keyboard_builder.button(text="ru", callback_data="ru")
+    # keyboard_builder = InlineKeyboardBuilder()
+    # keyboard_builder.button(text="kz", callback_data="kz")
+    # keyboard_builder.button(text="en", callback_data="en")
+    # keyboard_builder.button(text="ru", callback_data="ru")
 
-    await message.answer("Choose your language:", reply_markup=keyboard_builder.as_markup())
+    await message.answer("Choose your language:", reply_markup=languageChoiceKeyboard())
 
 @router.callback_query(Language.language, F.data)
 async def chosen_language(callback: CallbackQuery, state: FSMContext):
