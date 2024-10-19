@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, redirect
 from flask_cors import cross_origin, CORS # Import cross_origin for route-specific CORS
 import urllib.parse
-from main import send_message
 
 app = Flask(__name__)
 CORS(app)
